@@ -24,11 +24,16 @@ const ProductList = () => {
         loadData();
     }, []);
 
-    const loadData = () => {
+    const loadData = useCallback(() => {
         if (loading) return;
         setLoading(true);
-        fetchProducts(data.limit, data.skip)
+        const {
+            limit,
+            skip
+        } = data;
+        fetchProducts(limit, skip)
             .then((responseData) => {
+                console.log(responseData);
                 setData((prevData) => {
                     return {
                         products: [ ...prevData.products, ...responseData.products],
@@ -40,21 +45,28 @@ const ProductList = () => {
                 setLoading(false);
             })
             .catch((error) => {
+                setLoading(false);
                 console.error(error);
             })
             .finally(() => {
                 setLoading(false);
             });
-    }
+    }, [data.products, loading])
 
-    const getNewData = useCallback(() => {
-        if (data.products.length < data.total) {
+    const getNewData = useCallback(async () => {
+        const {
+            products,
+            total
+        } = data;
+        console.log(data.products.length, total);
+        if (products.length < total) {
+            console.log("fetching new data");
             loadData();
         }
-    }, []);
+    }, [data.products, loading]);
 
     const {
-        products
+        products,
     } = data;
     return (
         <SafeAreaView>
@@ -70,7 +82,7 @@ const ProductList = () => {
                 }}
                 onEndReached={getNewData}
                 keyExtractor={(item, index) => item.id}
-                onEndReachedThreshold={0.1}
+                onEndReachedThreshold={0.2}
             />
         </SafeAreaView>
     )
