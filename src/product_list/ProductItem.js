@@ -10,6 +10,7 @@ const ProductItem = ({item, index}) => {
                 <Image 
                     source={{uri: item.thumbnail}}
                     style={styles.image}
+                    
                 />
             </View>
             <View style={styles.detailContainer}>

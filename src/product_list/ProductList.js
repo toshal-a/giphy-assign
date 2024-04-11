@@ -58,7 +58,7 @@ const ProductList = () => {
             products,
             total
         } = data;
-        console.log(data.products.length, total);
+
         if (products.length < total) {
             console.log("fetching new data");
             loadData();
